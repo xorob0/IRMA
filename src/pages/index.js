@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react"
 import * as R from "ramda"
+import useKey from "use-key-hook"
+
+const paper = "📝"
+const rock = "🗿"
+const scissor = "✂️"
+const choices = [rock, paper, scissor]
 
 const getAllGrams = n => {
   if (typeof n !== "number" || isNaN(n) || n < 1 || n === Infinity) {
@@ -30,9 +36,7 @@ const getAllGrams = n => {
 }
 
 const guessNext = (hist, n = 5) => {
-  console.log("hist", hist)
   const allGrams = getAllGrams(n)([...hist])
-  console.log(allgrams)
 
   return choices
     .reduce((stats, choice) => {
@@ -48,44 +52,101 @@ const guessNext = (hist, n = 5) => {
     }, [])
     .reduce(
       (bestMatch, stat) => {
-        console.log("stat", stat)
-        return stat.score > bestMatch.score ? stat : bestMatch
+        return stat.score === bestMatch.score
+          ? {
+              score: stat.score,
+              choice: choices[Math.floor(Math.random() * choices.length)],
+            }
+          : stat.score > bestMatch.score
+          ? stat
+          : bestMatch
       },
-      { score: -1 }
-    )
+      { score: 0, choice: choices[Math.floor(Math.random() * choices.length)] }
+    ).choice
 }
 
-const paper = "📝"
-const rock = "🗿"
-const scissor = "✂️"
-const choices = [rock, paper, scissor]
+const getBeater = choice =>
+  choice === rock ? paper : choice === paper ? scissor : rock
 
 const IndexPage = () => {
   const [hist, setHist] = useState([])
   const [playerChoice, setPlayerChoice] = useState(undefined)
   const [computerChoice, setComputerChoice] = useState(undefined)
   const [guessedChoice, setGuessedChoice] = useState(undefined)
+  const [totalPlays, setTotalPlays] = useState(0)
+  const [playerWins, setPlayerWins] = useState(0)
+  const [computerWin, setComputerWin] = useState(0)
+  const [draw, setDraw] = useState(0)
+  const [keyPressed, setKeyPressed] = useState(undefined)
+
+  useKey(
+    pressedKey => {
+      setKeyPressed(pressedKey)
+    },
+    {
+      detectKeys: ["j", "k", "l"],
+      keyevent: "keydown",
+    }
+  )
+
+  useKey(
+    () => {
+      setKeyPressed(undefined)
+    },
+    {
+      detectKeys: ["j", "k", "l"],
+      keyevent: "keyup",
+    }
+  )
+
+  useEffect(() => {
+    keyPressed === 106
+      ? play(rock)
+      : keyPressed === 107
+      ? play(paper)
+      : keyPressed === 108 && play(scissor)
+  }, [keyPressed])
 
   const play = useCallback(
     choice => {
-      console.log("hist1", hist)
+      setTotalPlays(plays => plays + 1)
+      calculate([...hist, choice])
       setHist(hist => [...hist, choice])
       setPlayerChoice(choice)
       setComputerChoice(guessedChoice)
-      calculate(hist)
     },
     [hist, setHist, setPlayerChoice]
   )
 
-  const calculate = useCallback(hist => setGuessedChoice(guessNext(hist)), [
-    setGuessedChoice,
+  useEffect(() => {
+    playerChoice === computerChoice
+      ? setDraw(draw => draw + 1)
+      : getBeater(playerChoice) === computerChoice
+      ? setComputerWin(wins => wins + 1)
+      : setPlayerWins(wins => wins + 1)
+  }, [
+    setComputerWin,
+    setPlayerWins,
+    setDraw,
+    computerChoice,
+    playerChoice,
+    totalPlays,
   ])
+
+  const calculate = useCallback(
+    hist => setGuessedChoice(getBeater(guessNext(hist))),
+    [setGuessedChoice]
+  )
 
   return (
     <div>
-      <button onClick={() => play(paper)}>📝</button>
-      <button onClick={() => play(rock)}>✂️</button>
-      <button onClick={() => play(scissor)}>🗿</button>
+      <p> Player : {playerWins}</p>
+      <p> Computer : {computerWin}</p>
+      <p> Draws : {draw}</p>
+      <p>Computer Ratio : {(100 * computerWin) / (computerWin + playerWins)}</p>
+      <button onClick={() => play(paper)}>{paper}</button>
+      <button onClick={() => play(rock)}>{rock}</button>
+      <button onClick={() => play(scissor)}>{scissor}</button>
       <p>
         {playerChoice} vs {computerChoice}
       </p>
