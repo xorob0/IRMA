@@ -42,7 +42,7 @@ Now let's take the last 2 values : `["🗿", "✂️"]` and filter out all the g
 ["🗿", "✂️", "🗿"]
 ["🗿", "✂️", "📝"]
 ```
-As we can see I have the tendency to put a `"📝"` after writing `["🗿", "✂️"]`, so IRMA will play `"🗿"`. Now do this but with a lot of data and several grams sizes and you have a fully fonctionning IRMA.
+As we can see I have the tendency to put a `"📝"` after writing `["🗿", "✂️"]`, so IRMA will play `"✂️"`. Now do this but with a lot of data and several grams sizes and you have a fully fonctionning IRMA.
 
 # Conclusion
 
