@@ -7,7 +7,7 @@ You can also use the j-k-l buttons on your keyboard to play faster.
 So IRMA is just a statistical computing algorithm that learn from the player. She remember every moves and try to predict the next one based on the previous successions. If you think you can be smarter than her and generate random move, try to stay bellow 50% accuracy after 100 moves. 
 Human beeings are not able to deliver true randomness, and IRMA know it. Let's take for exemple the 20 first moves an user (me) made:
 ```
-["📝", "✂️", "✂️", "📝", "✂️", "📝", "📝", "📝", "📝", "📝", "✂️", "📝", "📝", "✂️", "📝", "📝", "✂️", "📝", "📝", "✂️"]
+["📝", "✂️", "✂️", "🗿", "✂️", "📝", "🗿", "📝", "🗿", "🗿", "✂️", "🗿", "📝", "✂️", "📝", "🗿", "✂️", "📝", "🗿", "✂️"]
 ```
 It looks pretty random and it seems like it would be really difficult to predict my next move.
 Now let's try to divide this list in 3-grams, the 3-grams is the list of all successions of 3 choices that were made by the user. 
@@ -16,33 +16,33 @@ This is not the same as dividing the list by groups of 3, for exemple the list `
 Here we have :
 ```
 ["📝", "✂️", "✂️"]
-["✂️", "✂️", "📝"]
-["✂️", "📝", "✂️"]
+["✂️", "✂️", "🗿"]
+["✂️", "🗿", "✂️"]
+["🗿", "✂️", "📝"]
+["✂️", "📝", "🗿"]
+["📝", "🗿", "📝"]
+["🗿", "📝", "🗿"]
+["📝", "🗿", "🗿"]
+["🗿", "🗿", "✂️"]
+["🗿", "✂️", "🗿"]
+["✂️", "🗿", "📝"]
+["🗿", "📝", "✂️"]
 ["📝", "✂️", "📝"]
-["✂️", "📝", "📝"]
-["📝", "📝", "📝"]
-["📝", "📝", "📝"]
-["📝", "📝", "📝"]
-["📝", "📝", "✂️"]
-["📝", "✂️", "📝"]
-["✂️", "📝", "📝"]
-["📝", "📝", "✂️"]
-["📝", "✂️", "📝"]
-["✂️", "📝", "📝"]
-["📝", "📝", "✂️"]
-["📝", "✂️", "📝"]
-["✂️", "📝", "📝"]
-["📝", "📝", "✂️"]
+["✂️", "📝", "🗿"]
+["📝", "🗿", "✂️"]
+["🗿", "✂️", "📝"]
+["✂️", "📝", "🗿"]
+["📝", "🗿", "✂️"]
 ```
 Still looks pretty random, but maybe you can already see some pattern. That is because, even for only 20 values I struggled to create random data, fearing to repeat myself, and yet I still did without realising it.
 
-Now let's take the last 2 values : `["📝", "✂️"]` and filter out all the grams that do not start with those values:
+Now let's take the last 2 values : `["🗿", "✂️"]` and filter out all the grams that do not start with those values:
 ```
-["📝", "✂️", "📝"]
-["📝", "✂️", "📝"]
-["📝", "✂️", "📝"]
+["🗿", "✂️", "📝"]
+["🗿", "✂️", "🗿"]
+["🗿", "✂️", "📝"]
 ```
-As we can see I have the tendency to put a `"📝"` after writing `["📝", "✂️"]`, so IRMA will play `"📝"`. Now do this but with a lot of data and several grams sizes and you have a fully fonctionning IRMA.
+As we can see I have the tendency to put a `"📝"` after writing `["🗿", "✂️"]`, so IRMA will play `"🗿"`. Now do this but with a lot of data and several grams sizes and you have a fully fonctionning IRMA.
 
 # Conclusion
 
